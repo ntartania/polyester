@@ -10,10 +10,14 @@ License: LighTS is licensed with the GNU lesser GPL, Polyester with the GPL.
 Polyester is a tuple space implementation written in java, based on the lighTS framework (http://lights.sourceforge.net/) by Gian Pietro PIcco et al.
 Unlike most tuple-space implementations, polyester is meant to be integrated into a single application, rather than deployed in a client-server architecture.
 Polyester was developed as a component of the U-P2P (for "Universal P2P") file-sharing client, a research project at Carleton University.
-However, its implementation is completely independent of the file-sharing application, and polyester can be used as the basis of any tuple space-based application where multiple agents asynchronously interact via the principles outlined in Gelerntner & Carriero's original paper about the Linda coordination language.
-The reader can get familiar with Polyester by running the application polyester.java in the package "example". 
+However, its implementation is completely independent of the file-sharing application, and polyester can be used to build any application where multiple processes are coordinated following the principles of so-called blackboard systems. Read on for more details.
 
+The reader can get familiar with Polyester by running the application polyester.java in the package "example". 
+. 
 1- Basic Principles
+
+Tuple Spaces are systems that support coordination of various agents following a principle similar to the "blackboard architecture" defined in AI. 
+The original idea of tuple spaces and the coordination model used in most implementations (including this one) was described by Gelertner are Carriero in a paper entitled "Coordination languages and their significance", in 1992.
 
 The basic principle of a tuple-space is that it allows agents to communicate asynchronously by posting and reading tuples to/from the shared "tuple space". The different agents don't necessarily need to know about each other's existence, and problems may be solved by complex processes that unfold in an unplanned manner. 
 
