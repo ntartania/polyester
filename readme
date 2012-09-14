@@ -1,0 +1,40 @@
+
+						Polyester: a lightweight java tuple-space framework.
+
+Written by Babak Esfandiari, Alan Davoust
+Based on lighTS, a tuple-space framework written by Gian Pietro Picco and others.
+License: LighTS is licensed with the GNU lesser GPL, Polyester with the GPL.
+
+0- Introduction
+
+Polyester is a tuple space implementation written in java, based on the lighTS framework (http://lights.sourceforge.net/) by Gian Pietro PIcco et al.
+Unlike most tuple-space implementations, polyester is meant to be integrated into a single application, rather than deployed in a client-server architecture.
+Polyester was developed as a component of the U-P2P (for "Universal P2P") file-sharing client, a research project at Carleton University.
+However, its implementation is completely independent of the file-sharing application, and polyester can be used as the basis of any tuple space-based application where multiple agents asynchronously interact via the principles outlined in Gelerntner & Carriero's original paper about the Linda coordination language.
+The reader can get familiar with Polyester by running the application polyester.java in the package "example". 
+
+1- Basic Principles
+
+The basic principle of a tuple-space is that it allows agents to communicate asynchronously by posting and reading tuples to/from the shared "tuple space". The different agents don't necessarily need to know about each other's existence, and problems may be solved by complex processes that unfold in an unplanned manner. 
+
+Agents can output tuples to the tuple space at any time, and read tuples by submitting a "template" to the tuple space: the operation retrieves all the tuples that match the template, according to matching rules outlined below. The tuples may be removed from the tuplespace, or the agent may only retrieve a copy (these are two different operations). In addition, the read operations may block until a matching tuple appears, or may simply retrieve any immediately present matching tuple, or /null/ if none are present.
+
+The above operations are generic tuple-space operations defined in the Linda language. In Polyester, our implementation makes it particularly easy to implement agents based on a simple design, that of our AbstractWorker class.
+The worker has a number of templates, and continuously watches the tuples space. Any matching tuples are read (a copy retrieved), and processed in a FIFO order, possibly dumping new tuples as a response. The worker manages a queue and never processes the same tuple twice.
+An additional worker is provided (the CleaningWorker), which removes the tuples from the tuples-space after a determined lifetime.
+
+The Cleaning worker and several workers based on the Abstract worker described above make up the central coordination component in our application U-P2P.
+
+2- Tuple Matching
+
+One of the defining issues of a tuple space implementation is the structure and matching principle of tuples and templates.
+The tuples in Polyester may contain (as fields in the tuples), java objects, and template fields contain java Class instances. 
+Tuples and templates are matched field-by-field. A field containing java object A matches another field containing object B if one of the following is true:
+- A instanceof B
+- A instanceof C and C extends B
+- A.equals(B)
+
+There is an additional possibility, which we have developed in the context of our application, which uses XML.
+if A is an instance of an XML DOM (document object model), and B is an instance of an Xpath expression, the fields will match if the xpath expression matches the XML DOM (i.e. the selection made by the Xpath expression applied to the DOM is not empty).
+See the polyester example application.
+
